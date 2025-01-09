@@ -51,26 +51,37 @@ const Chatbot = ({ bot, onBack }) => {
 
   return (
     <div className="chat-interface">
-      <div className="chat-header bg-white p-3 rounded shadow-sm mb-3 d-flex align-items-center">
-        <Button 
-          variant="light" 
-          onClick={onBack}
-          className="me-3"
-        >
-          <ArrowLeft size={20} />
-        </Button>
-        <div className="bot-avatar me-3">
-          <Bot size={24} />
+      <div className="chat-header bg-white p-3 rounded-3 shadow-sm mb-4">
+        <div className="d-flex align-items-center">
+          <Button 
+            variant="light" 
+            onClick={onBack}
+            className="me-3 d-flex align-items-center"
+            size="sm"
+          >
+            <ArrowLeft size={18} />
+          </Button>
+          <div className="bot-avatar me-3">
+            <Bot size={24} />
+          </div>
+          <div>
+            <h5 className="mb-0">{bot.name}</h5>
+            <small className="text-muted">AI Assistant</small>
+          </div>
         </div>
-        <h5 className="mb-0">{bot.name}</h5>
       </div>
 
-      <Card className="chat-container shadow-sm">
+      <Card className="chat-container shadow-sm border-0">
         <Card.Body className="chat-messages">
           {messages.length === 0 && (
             <div className="text-center text-muted my-5">
-              <Bot size={48} className="mb-3" />
-              <p>Hi! I'm {bot.name}. How can I help you today?</p>
+              <div className="welcome-icon mb-3">
+                <Bot size={48} />
+              </div>
+              <h4 className="mb-2">Welcome to {bot.name}!</h4>
+              <p className="text-muted">
+                I'm here to help you with your questions. Feel free to ask anything!
+              </p>
             </div>
           )}
           
@@ -89,14 +100,14 @@ const Chatbot = ({ bot, onBack }) => {
           {isLoading && (
             <div className="message bot mb-3">
               <div className="message-content d-flex align-items-center">
-                <Spinner size="sm" className="me-2" />
+                <Spinner size="sm" className="me-2" animation="border" />
                 Thinking...
               </div>
             </div>
           )}
         </Card.Body>
 
-        <Card.Footer className="bg-white border-top-0">
+        <Card.Footer className="bg-white border-top p-3">
           <Form onSubmit={handleSubmit} className="d-flex gap-2">
             <Form.Control
               type="text"
@@ -104,8 +115,13 @@ const Chatbot = ({ bot, onBack }) => {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message..."
               disabled={isLoading}
+              className="py-2"
             />
-            <Button type="submit" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              disabled={isLoading}
+              className="px-4"
+            >
               <Send size={20} />
             </Button>
           </Form>

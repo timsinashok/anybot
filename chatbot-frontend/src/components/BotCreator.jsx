@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Form, Button, Alert, Badge } from 'react-bootstrap';
+import { Card, Form, Button, Alert, Badge, Spinner } from 'react-bootstrap';
 import { Upload, X, Plus } from 'lucide-react';
 import axios from 'axios';
 
@@ -61,27 +61,29 @@ const BotCreator = ({ onBotCreated }) => {
   };
 
   return (
-    <Card className="shadow-sm">
-      <Card.Body className="p-4">
-        <h4 className="mb-4">Create New Bot</h4>
+    <Card className="border-0 bg-transparent">
+      <Card.Body className="p-0">
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-4">
-            <Form.Label>Bot Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter bot name"
-              value={botName}
-              onChange={(e) => setBotName(e.target.value)}
-              required
-            />
-          </Form.Group>
+          <div className="mb-4 pb-3 border-bottom">
+            <Form.Group>
+              <Form.Label className="fw-semibold mb-2">Bot Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter a name for your bot"
+                value={botName}
+                onChange={(e) => setBotName(e.target.value)}
+                required
+                className="form-control-lg"
+              />
+            </Form.Group>
+          </div>
 
           <Form.Group className="mb-4">
-            <Form.Label>Upload Documentation Files</Form.Label>
-            <div className="d-grid gap-2">
+            <Form.Label className="fw-semibold mb-3">Documentation Files</Form.Label>
+            <div className="upload-zone p-4 text-center bg-light rounded-3 mb-3">
               <Button
-                variant="outline-primary"
-                className="d-flex align-items-center justify-content-center gap-2"
+                variant="primary"
+                className="d-inline-flex align-items-center gap-2 mb-2"
                 as="label"
               >
                 <Upload size={20} />
@@ -94,53 +96,64 @@ const BotCreator = ({ onBotCreated }) => {
                   accept=".pdf,.doc,.docx,.txt,.md"
                 />
               </Button>
+              <div className="text-muted small">
+                Supported formats: PDF, DOC, DOCX, TXT, MD
+              </div>
             </div>
-            <div className="mt-3 d-flex flex-wrap gap-2">
-              {docs.map((doc, index) => (
-                <Badge 
-                  bg="light" 
-                  text="dark" 
-                  className="d-flex align-items-center p-2"
-                  key={index}
-                >
-                  {doc.name}
-                  <X
-                    size={16}
-                    className="ms-2 cursor-pointer"
-                    onClick={() => removeDoc(index)}
-                  />
-                </Badge>
-              ))}
-            </div>
+            {docs.length > 0 && (
+              <div className="selected-files p-3 bg-white rounded-3 border">
+                <div className="small fw-semibold mb-2">Selected Files:</div>
+                <div className="d-flex flex-wrap gap-2">
+                  {docs.map((doc, index) => (
+                    <Badge 
+                      bg="light" 
+                      text="dark" 
+                      className="d-flex align-items-center p-2"
+                      key={index}
+                    >
+                      {doc.name}
+                      <X
+                        size={14}
+                        className="ms-2 cursor-pointer"
+                        onClick={() => removeDoc(index)}
+                      />
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-4">
-            <Form.Label>Documentation URLs</Form.Label>
-            {urls.map((url, index) => (
-              <div key={index} className="d-flex gap-2 mb-2">
-                <Form.Control
-                  type="url"
-                  placeholder="Enter documentation URL"
-                  value={url}
-                  onChange={(e) => handleUrlChange(index, e.target.value)}
-                />
-                <Button
-                  variant="outline-danger"
-                  onClick={() => removeUrl(index)}
-                >
-                  <X size={20} />
-                </Button>
-              </div>
-            ))}
-            <Button
-              variant="outline-secondary"
-              className="d-flex align-items-center gap-2"
-              onClick={addUrlField}
-              type="button"
-            >
-              <Plus size={20} />
-              Add URL
-            </Button>
+            <Form.Label className="fw-semibold mb-3">Documentation URLs</Form.Label>
+            <div className="url-inputs">
+              {urls.map((url, index) => (
+                <div key={index} className="d-flex gap-2 mb-2">
+                  <Form.Control
+                    type="url"
+                    placeholder="https://docs.example.com"
+                    value={url}
+                    onChange={(e) => handleUrlChange(index, e.target.value)}
+                  />
+                  <Button
+                    variant="outline-danger"
+                    onClick={() => removeUrl(index)}
+                    className="px-3"
+                  >
+                    <X size={20} />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                variant="outline-primary"
+                className="d-flex align-items-center gap-2 mt-2"
+                onClick={addUrlField}
+                type="button"
+              >
+                <Plus size={20} />
+                Add Another URL
+              </Button>
+            </div>
           </Form.Group>
 
           {error && (
@@ -154,8 +167,16 @@ const BotCreator = ({ onBotCreated }) => {
               type="submit"
               size="lg"
               disabled={isLoading}
+              className="py-3"
             >
-              {isLoading ? 'Creating Bot...' : 'Create Bot'}
+              {isLoading ? (
+                <>
+                  <Spinner size="sm" className="me-2" />
+                  Creating Bot...
+                </>
+              ) : (
+                'Create Bot'
+              )}
             </Button>
           </div>
         </Form>

@@ -37,7 +37,8 @@ def chat():
         return jsonify({"error": "No query provided"}), 400
 
     try:
-        response = agent.get_response(query)
+        # response = agent.get_response(query)
+        response = "Hello"
         return jsonify({"response": response})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
