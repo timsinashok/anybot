@@ -1,43 +1,135 @@
 import React from 'react';
-import { Container, Navbar, Nav, Button } from 'react-bootstrap';
-import { Bot, Github } from 'lucide-react';
+import { Box, AppBar, Toolbar, IconButton, Typography, Button, Drawer } from '@mui/material';
+import { Menu as MenuIcon, GitHub } from '@mui/icons-material';
 import Sidebar from '../components/Sidebar';
+import { motion } from 'framer-motion';
+
+const DRAWER_WIDTH = 280;
 
 const MainLayout = ({ children }) => {
-  return (
-    <div className="app-wrapper">
-      <Navbar bg="white" className="navbar-custom py-3 border-bottom">
-        <Container fluid>
-          <Navbar.Brand className="d-flex align-items-center">
-            <div className="brand-logo me-2">
-              <Bot size={28} />
-            </div>
-            <span className="brand-text">AnyBot</span>
-          </Navbar.Brand>
-          <Nav className="ms-auto">
-            <Button 
-              variant="outline-dark" 
-              size="sm"
-              href="https://github.com/yourusername/anybot"
-              target="_blank"
-              className="d-flex align-items-center gap-2"
-            >
-              <Github size={18} />
-              <span className="d-none d-md-inline">View on GitHub</span>
-            </Button>
-          </Nav>
-        </Container>
-      </Navbar>
+  const [mobileOpen, setMobileOpen] = React.useState(false);
 
-      <div className="d-flex flex-grow-1">
-        <Sidebar />
-        <main className="app-main">
-          <Container fluid className="py-4">
-            {children}
-          </Container>
-        </main>
-      </div>
-    </div>
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  return (
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      <AppBar 
+        position="fixed" 
+        sx={{ 
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          bgcolor: 'background.paper',
+          boxShadow: 'none',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Typography 
+              variant="h6" 
+              component="div" 
+              sx={{ 
+                color: 'text.primary',
+                fontWeight: 600,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1
+              }}
+            >
+              <Box
+                component="img"
+                src="/logo.png"
+                sx={{ height: 32, width: 32 }}
+              />
+              AnyBot
+            </Typography>
+          </motion.div>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button
+            startIcon={<GitHub />}
+            href="https://github.com/yourusername/anybot"
+            target="_blank"
+            sx={{ ml: 2 }}
+          >
+            GitHub
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      <Box
+        component="nav"
+        sx={{ width: { sm: DRAWER_WIDTH }, flexShrink: { sm: 0 } }}
+      >
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true,
+          }}
+          sx={{
+            display: { xs: 'block', sm: 'none' },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: DRAWER_WIDTH,
+              bgcolor: 'background.paper',
+            },
+          }}
+        >
+          <Sidebar />
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', sm: 'block' },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: DRAWER_WIDTH,
+              bgcolor: 'background.paper',
+              borderRight: '1px solid',
+              borderColor: 'divider',
+            },
+          }}
+          open
+        >
+          <Sidebar />
+        </Drawer>
+      </Box>
+
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
+          bgcolor: 'background.default',
+          minHeight: '100vh',
+          pt: { xs: 8, sm: 9 },
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {children}
+        </motion.div>
+      </Box>
+    </Box>
   );
 };
 

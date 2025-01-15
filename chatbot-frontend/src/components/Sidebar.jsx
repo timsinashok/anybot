@@ -1,32 +1,80 @@
 import React from 'react';
-import { Nav } from 'react-bootstrap';
-import { Plus, Edit, MessageSquare } from 'lucide-react';
+import { 
+  Box, 
+  List, 
+  ListItem, 
+  ListItemButton, 
+  ListItemIcon, 
+  ListItemText,
+  Typography,
+  Divider,
+} from '@mui/material';
+import { 
+  Add as AddIcon,
+  Edit as EditIcon,
+  Chat as ChatIcon,
+} from '@mui/icons-material';
 import { useAppContext } from '../context/AppContext';
+import { motion } from 'framer-motion';
 
 const Sidebar = () => {
   const { activeView, setActiveView } = useAppContext();
 
-  const navItems = [
-    { id: 'create', icon: Plus, label: 'Create Assistant' },
-    { id: 'edit', icon: Edit, label: 'Update Assistant' },
-    { id: 'chat', icon: MessageSquare, label: 'Chat Interface' },
+  const menuItems = [
+    { id: 'create', icon: AddIcon, label: 'Create Assistant' },
+    { id: 'edit', icon: EditIcon, label: 'Update Assistant' },
+    { id: 'chat', icon: ChatIcon, label: 'Chat Interface' },
   ];
 
   return (
-    <div className="sidebar">
-      <Nav className="flex-column">
-        {navItems.map(({ id, icon: Icon, label }) => (
-          <Nav.Link 
-            key={id}
-            className={`sidebar-link ${activeView === id ? 'active' : ''}`}
-            onClick={() => setActiveView(id)}
-          >
-            <Icon size={20} />
-            <span>{label}</span>
-          </Nav.Link>
+    <Box sx={{ pt: { xs: 2, sm: 8 }, pb: 2 }}>
+      <Box sx={{ px: 3, mb: 3 }}>
+        <Typography 
+          variant="overline" 
+          sx={{ 
+            color: 'text.secondary',
+            fontWeight: 500,
+          }}
+        >
+          Navigation
+        </Typography>
+      </Box>
+      <List>
+        {menuItems.map(({ id, icon: Icon, label }) => (
+          <ListItem key={id} disablePadding>
+            <ListItemButton
+              selected={activeView === id}
+              onClick={() => setActiveView(id)}
+              sx={{
+                mx: 1,
+                borderRadius: 1,
+                '&.Mui-selected': {
+                  bgcolor: 'primary.light',
+                  color: 'primary.contrastText',
+                  '&:hover': {
+                    bgcolor: 'primary.light',
+                  },
+                  '& .MuiListItemIcon-root': {
+                    color: 'inherit',
+                  },
+                },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 40 }}>
+                <Icon />
+              </ListItemIcon>
+              <ListItemText 
+                primary={label}
+                primaryTypographyProps={{
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
         ))}
-      </Nav>
-    </div>
+      </List>
+    </Box>
   );
 };
 
