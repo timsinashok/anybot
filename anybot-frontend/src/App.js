@@ -44,8 +44,10 @@ function App() {
 
     try {
       // Call the API
-      const response = await axios.get(`http://localhost:8001/query?query=${encodeURIComponent(message)}&top_n=3`);
-      
+      const response = await axios.post('http://127.0.0.1:8000/query', {
+        query: message,
+        top_n: 2
+      });
       // Add bot response to chat
       const botMessage = {
         type: 'bot',
