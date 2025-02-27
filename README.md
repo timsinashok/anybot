@@ -2,7 +2,7 @@ Something Similar
 https://www.runllm.com
 
 
-# Cerebras Documentation Assistant
+# Anybot
 
 A RAG-powered documentation chatbot that uses Groq API for LLM responses and ChromaDB for vector search.
 
