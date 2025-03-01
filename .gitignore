@@ -3,3 +3,5 @@ __pycache__/
 config.ini
 .env
 */__pycache__
+src/.cache/
+src/scraped_data/
