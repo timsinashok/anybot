@@ -57,8 +57,8 @@ async def crawl_sequential(urls: List[str]):
         with open(os.path.join(SAVE_DIR, "scraping_results.json"), "w", encoding="utf-8") as json_file:
             json.dump(results_metadata, json_file, indent=4)
 
-def get_cerebras_api_docs_urls():
-    sitemap_url = "https://ai.pydantic.dev/sitemap.xml"
+def get_api_docs_urls():
+    sitemap_url = "https://openweathermap.org/sitemap.xml"
     try:
         response = requests.get(sitemap_url)
         response.raise_for_status()
@@ -71,7 +71,7 @@ def get_cerebras_api_docs_urls():
         return []
 
 async def main():
-    urls = get_cerebras_api_docs_urls()
+    urls = get_api_docs_urls()
     if urls:
         print(f"Found {len(urls)} URLs to crawl")
         await crawl_sequential(urls)
